@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_20_220511) do
+ActiveRecord::Schema.define(version: 2020_10_20_221447) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 2020_10_20_220511) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "appointments", "therapists"
+  add_foreign_key "appointments", "therapists", primary_key: "user_id"
   add_foreign_key "appointments", "users"
   add_foreign_key "therapists", "users"
   add_foreign_key "therapists_specialties", "specialties"
