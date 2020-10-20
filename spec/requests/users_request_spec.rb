@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
   let!(:users) { create_list(:user, 10) }
+  let(:user_id) { users.first.id }
 
   describe 'GET /users' do
     before { get '/users' }
@@ -67,7 +68,7 @@ RSpec.describe "Users", type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match(/Validation failed: Created by can't be blank/)
+          .to match(/Validation failed: Email can't be blank/)
       end
     end
   end
@@ -76,7 +77,7 @@ RSpec.describe "Users", type: :request do
     let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com' } }
 
     context 'when the record exists' do
-      before { put "/users/#{user.id}", params: valid_attributes }
+      before { put "/users/#{user_id}", params: valid_attributes }
 
       it 'updates the record' do
         expect(response.body).to be_empty
