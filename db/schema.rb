@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_20_143907) do
+ActiveRecord::Schema.define(version: 2020_10_20_152255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,15 @@ ActiveRecord::Schema.define(version: 2020_10_20_143907) do
     t.index ["name"], name: "index_specialties_on_name", unique: true
   end
 
+  create_table "therapists_specialties", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "specialty_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["specialty_id"], name: "index_therapists_specialties_on_specialty_id"
+    t.index ["user_id"], name: "index_therapists_specialties_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username", null: false
     t.text "email", null: false
@@ -32,4 +41,6 @@ ActiveRecord::Schema.define(version: 2020_10_20_143907) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "therapists_specialties", "specialties"
+  add_foreign_key "therapists_specialties", "users"
 end
