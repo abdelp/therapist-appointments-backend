@@ -15,14 +15,6 @@ ActiveRecord::Schema.define(version: 2020_10_20_143907) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "patients", id: false, force: :cascade do |t|
-    t.bigint "id", default: -> { "nextval('users_id_seq'::regclass)" }, null: false
-    t.string "username"
-    t.text "email"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "specialties", force: :cascade do |t|
     t.string "name", null: false
     t.text "description", null: false
