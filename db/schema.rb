@@ -24,9 +24,11 @@ ActiveRecord::Schema.define(version: 2020_10_20_143907) do
   end
 
   create_table "specialties", force: :cascade do |t|
+    t.string "name", null: false
     t.text "description", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_specialties_on_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|
