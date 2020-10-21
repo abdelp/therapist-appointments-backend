@@ -2,10 +2,12 @@ require 'rails_helper'
 
 RSpec.describe "Appointments", type: :request do
   let!(:user) { create(:user) }
+  let(:user_id) { user.id }
   let!(:user_therapist) { create(:user) }
-
+  let(:therapist_id) { user_therapist.id }
   let!(:therapist) { create(:therapist, user_id: user_therapist.id) }
-  let!(:appointments) { create_list(:appointment, 20, user_id: user.id, therapist_id: therapist.id) }
+  let!(:appointments) { create_list(:appointment, 20, user_id: user.id, therapist_id: therapist_id) }
+  let(:id) { appointments.first.id }
 
   describe 'GET /users/:user_id/appointments' do
     before { get "/users/#{user_id}/appointments" }
@@ -28,7 +30,7 @@ RSpec.describe "Appointments", type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to match(/Could't find User/)
+        expect(response.body).to match(/Couldn't find User/)
       end
     end
   end
@@ -54,15 +56,17 @@ RSpec.describe "Appointments", type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to match(/Could't find Appointment/)
+        expect(response.body).to match(/Couldn't find Appointment/)
       end
     end
   end
 
   describe 'POST /users/:user_id/appointments' do
-    let(:valid_attributes) {{ user_id: 1, therapist_id: 2, start_at: '2020-10-01 10:00:00', end_at: '2020-10-01 11:00:00' }}
+    let(:valid_attributes) {{ user_id: user_id, therapist_id: therapist_id , start_at: '2020-10-01 10:00:00', end_at: '2020-10-01 11:00:00' }}
 
     context 'when request attributes are valid' do
+      before { post "/users/#{user_id}/appointments", params: valid_attributes }
+
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
       end
@@ -76,15 +80,15 @@ RSpec.describe "Appointments", type: :request do
       end
 
       it 'returns a failure message' do
-        expect(response.body).to match(/Validation failed: Name can't be blank/)
+        expect(response.body).to match(/Validation failed: Therapist must exist/)
       end
     end
   end
 
   describe 'PUT /users/:user_id/appointments/:id' do
-    # let (:valid_attributes) {{ name: '' }}
+    let(:valid_attributes) {{ start_at: '2010-01-01' }}
 
-    # before { put "/users/#{user_id}/appointments/#{id}"}
+    before { put "/users/#{user_id}/appointments/#{id}", params: valid_attributes }
 
     context 'when appointment exists' do
       it 'returns status code 204' do
@@ -93,7 +97,7 @@ RSpec.describe "Appointments", type: :request do
 
       it 'updates the item' do
         updated_appointment = Appointment.find(id)
-        # expect(updated_appointment.name).to match(/)
+        expect(updated_appointment.start_at.utc.to_s).to match(/2010-01-01/)
       end
     end
 
@@ -105,7 +109,7 @@ RSpec.describe "Appointments", type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to match(/Could't find Appointment/)
+        expect(response.body).to match(/Couldn't find Appointment/)
       end
     end
   end
