@@ -40,19 +40,20 @@ RSpec.describe "Therapists", type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find User/)
+        expect(response.body).to match(/Couldn't find Therapist/)
       end
     end
   end
 
   describe 'POST /therapists' do
-    let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com' }}
+    # let!(:new_user) { create(:user) }
+    let(:valid_attributes) { { user_id: new_user.id } }
 
     context 'when the request is valid' do
       before { post '/therapists', params: valid_attributes }
 
-      it 'creates a user' do
-        expect(json['username']).to eq('AbdelP')
+      it 'creates a therapist' do
+        expect(json['user_id']).to eq(71)
       end
 
       it 'returns status code 201' do
@@ -69,7 +70,7 @@ RSpec.describe "Therapists", type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match(/Validation failed: Email can't be blank/)
+          .to match(/Validation failed: User must exist/)
       end
     end
   end
