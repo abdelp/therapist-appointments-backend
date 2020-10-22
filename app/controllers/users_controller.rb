@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
+  before_action :require_login
   
   def index
     @users = User.all
@@ -8,7 +9,32 @@ class UsersController < ApplicationController
 
   def create
     @user = User.create!(user_params)
-    json_response(@user, :created)
+
+    if @user.valid?
+      token = encode_token({user_id: @user.id})
+      render json: {user: @user, token: token}
+    else
+      render json: {error: 'Invalid username or password'}
+    end
+  end
+
+  def login
+    @user = User.find_by(username: params[:username])
+
+    if @user && @user.authenticate(params[:password])
+      token = encode_token({user_id: @user.id})
+      render json: {user: @user, token: token, sucess: "Welcome back, #{@user.username}"}
+    else
+      render json: {error: 'Invalid username or password'}
+    end
+  end
+
+  def auto_login
+    if logged_in_user
+      render json: logged_in_user
+    else
+      render json: {errors: 'No User Logged In'}
+    end
   end
 
   def show
@@ -28,7 +54,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.permit(:username, :email)
+    params.permit(:username, :email, :password)
   end
 
   def set_user
