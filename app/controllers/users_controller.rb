@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
-  before_action :require_login
-  
+  skip_before_action :require_login, only: [:login, :create]
+
   def index
     @users = User.all
     json_response(@users)

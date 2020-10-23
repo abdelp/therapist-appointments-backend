@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   include Response
   include ExceptionHandler
 
-  before_action :require_login
+  before_action :require_login, except: :login
 
   def encode_token(payload)
     JWT.encode(payload, 's3cr3t')
