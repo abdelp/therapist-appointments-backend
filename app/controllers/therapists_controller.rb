@@ -2,7 +2,7 @@ class TherapistsController < ApplicationController
   before_action :set_therapist, only: [:show, :update, :destroy]
   
   def index
-    @therapists = Therapist.all
+    @therapists = Therapist.all.joins("INNER JOIN users u ON u.id = therapists.user_id").select(:id, :user_id, :fullname)
     json_response(@therapists)
   end
 
