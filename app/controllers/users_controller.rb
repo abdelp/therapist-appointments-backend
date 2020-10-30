@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
-  skip_before_action :require_login, only: [:login, :create]
+  before_action :set_user, only: %i[show update destroy]
+  skip_before_action :require_login, only: %i[login create]
 
   def index
     @users = User.all
@@ -11,21 +11,21 @@ class UsersController < ApplicationController
     @user = User.create!(user_params)
 
     if @user.valid?
-      token = encode_token({user_id: @user.id})
-      render json: {user: @user, token: token}
+      token = encode_token({ user_id: @user.id })
+      render json: { user: @user, token: token }
     else
-      render status: 422, json: {error: 'Invalid username or password'}
+      render status: 422, json: { error: 'Invalid username or password' }
     end
   end
 
   def login
     @user = User.find_by(username: params[:username])
 
-    if @user && @user.authenticate(params[:password])
-      token = encode_token({user_id: @user.id})
-      render json: {user: @user, token: token, sucess: "Welcome back, #{@user.username}"}
+    if @user&.authenticate(params[:password])
+      token = encode_token({ user_id: @user.id })
+      render json: { user: @user, token: token, sucess: "Welcome back, #{@user.username}" }
     else
-      render status: 422, json: {error: 'Invalid username or password'}
+      render status: 422, json: { error: 'Invalid username or password' }
     end
   end
 
@@ -33,7 +33,7 @@ class UsersController < ApplicationController
     if logged_in_user
       render json: logged_in_user
     else
-      render status: 422, json: {errors: 'No User Logged In'}
+      render status: 422, json: { errors: 'No User Logged In' }
     end
   end
 

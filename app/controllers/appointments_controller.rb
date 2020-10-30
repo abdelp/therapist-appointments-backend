@@ -1,9 +1,14 @@
 class AppointmentsController < ApplicationController
   before_action :set_user
-  before_action :set_user_appointment, only: [:show, :update, :destroy]
+  before_action :set_user_appointment, only: %i[show update destroy]
 
   def index
-    json_response(@user.appointments)
+    @appointments = User
+                    .joins("JOIN appointments a ON a.user_id = users.id
+              JOIN therapists t ON t.user_id = a.therapist_id
+              JOIN users ut ON ut.id = t.user_id")
+                    .select('a.id, a.start_at, a.user_id pacient_id, a.created_at, a.therapist_id, ut.fullname therapist_name, users.fullname pacient_name')
+    json_response(@appointments)
   end
 
   def show

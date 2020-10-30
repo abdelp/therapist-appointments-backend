@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Users", type: :request do
+RSpec.describe 'Users', type: :request do
   let!(:users) { create_list(:user, 10) }
   let(:user_id) { users.first.id }
 
@@ -45,7 +45,7 @@ RSpec.describe "Users", type: :request do
   end
 
   describe 'POST /users' do
-    let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com' }}
+    let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com' } }
 
     context 'when the request is valid' do
       before { post '/users', params: valid_attributes }
@@ -60,7 +60,7 @@ RSpec.describe "Users", type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/users', params: { username: 'AbdelP' }}
+      before { post '/users', params: { username: 'AbdelP' } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)

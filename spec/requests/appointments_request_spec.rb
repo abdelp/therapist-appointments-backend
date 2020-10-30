@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Appointments", type: :request do
+RSpec.describe 'Appointments', type: :request do
   let!(:user) { create(:user) }
   let(:user_id) { user.id }
   let!(:user_therapist) { create(:user) }
@@ -62,7 +62,7 @@ RSpec.describe "Appointments", type: :request do
   end
 
   describe 'POST /users/:user_id/appointments' do
-    let(:valid_attributes) {{ user_id: user_id, therapist_id: therapist_id , start_at: '2020-10-01 10:00:00', end_at: '2020-10-01 11:00:00' }}
+    let(:valid_attributes) { { user_id: user_id, therapist_id: therapist_id, start_at: '2020-10-01 10:00:00', end_at: '2020-10-01 11:00:00' } }
 
     context 'when request attributes are valid' do
       before { post "/users/#{user_id}/appointments", params: valid_attributes }
@@ -86,7 +86,7 @@ RSpec.describe "Appointments", type: :request do
   end
 
   describe 'PUT /users/:user_id/appointments/:id' do
-    let(:valid_attributes) {{ start_at: '2010-01-01' }}
+    let(:valid_attributes) { { start_at: '2010-01-01' } }
 
     before { put "/users/#{user_id}/appointments/#{id}", params: valid_attributes }
 

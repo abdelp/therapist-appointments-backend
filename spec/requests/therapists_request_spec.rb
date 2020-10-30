@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Therapists", type: :request do
+RSpec.describe 'Therapists', type: :request do
   let!(:users) { create_list(:user, 10) }
   let!(:therapists) { create_list(:therapist, 10) }
   let(:user_id) { therapists.first.user_id }
@@ -62,7 +62,7 @@ RSpec.describe "Therapists", type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/therapists', params: { username: 'AbdelP' }}
+      before { post '/therapists', params: { username: 'AbdelP' } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
