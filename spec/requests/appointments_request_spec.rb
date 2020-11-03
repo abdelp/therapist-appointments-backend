@@ -8,9 +8,13 @@ RSpec.describe 'Appointments', type: :request do
   let!(:therapist) { create(:therapist, user_id: user_therapist.id) }
   let!(:appointments) { create_list(:appointment, 20, user_id: user.id, therapist_id: therapist_id) }
   let(:id) { appointments.first.id }
+  let(:token) {
+    post "/login", params: {username: user.username, password: '123456' }
+    JSON.parse(response.body)["token"]
+  }
 
   describe 'GET /users/:user_id/appointments' do
-    before { get "/users/#{user_id}/appointments" }
+    before { get "/users/#{user_id}/appointments", params: {}, headers: { 'Authorization': "Bearer #{token}" } }
 
     context 'when user exists' do
       it 'returns status code 200' do
@@ -36,7 +40,7 @@ RSpec.describe 'Appointments', type: :request do
   end
 
   describe 'GET /users/:user_id/appointments/:id' do
-    before { get "/users/#{user_id}/appointments/#{id}" }
+    before { get "/users/#{user_id}/appointments/#{id}", params: {}, headers: { 'Authorization': "Bearer #{token}" } }
 
     context 'when user appointment exists' do
       it 'returns status code 200' do
@@ -72,7 +76,7 @@ RSpec.describe 'Appointments', type: :request do
     end
 
     context 'when request attributes are valid' do
-      before { post "/users/#{user_id}/appointments", params: valid_attributes }
+      before { post "/users/#{user_id}/appointments", params: valid_attributes, headers: { 'Authorization': "Bearer #{token}" } }
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -80,7 +84,7 @@ RSpec.describe 'Appointments', type: :request do
     end
 
     context 'when an invalid request' do
-      before { post "/users/#{user_id}/appointments", params: {} }
+      before { post "/users/#{user_id}/appointments", params: {}, headers: { 'Authorization': "Bearer #{token}" } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -95,7 +99,9 @@ RSpec.describe 'Appointments', type: :request do
   describe 'PUT /users/:user_id/appointments/:id' do
     let(:valid_attributes) { { start_at: '2010-01-01' } }
 
-    before { put "/users/#{user_id}/appointments/#{id}", params: valid_attributes }
+    before { put "/users/#{user_id}/appointments/#{id}",
+      params: valid_attributes,
+      headers: { 'Authorization': "Bearer #{token}" } }
 
     context 'when appointment exists' do
       it 'returns status code 204' do
@@ -122,7 +128,7 @@ RSpec.describe 'Appointments', type: :request do
   end
 
   describe 'DELETE /users/:id' do
-    before { delete "/users/#{user_id}/appointments/#{id}" }
+    before { delete "/users/#{user_id}/appointments/#{id}", params: {}, headers: { 'Authorization': "Bearer #{token}" } }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
