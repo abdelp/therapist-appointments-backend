@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe 'Appointments', type: :request do
@@ -64,7 +62,14 @@ RSpec.describe 'Appointments', type: :request do
   end
 
   describe 'POST /users/:user_id/appointments' do
-    let(:valid_attributes) { { user_id: user_id, therapist_id: therapist_id, start_at: '2020-10-01 10:00:00', end_at: '2020-10-01 11:00:00' } }
+    let(:valid_attributes) do
+      {
+        user_id: user_id,
+        therapist_id: therapist_id,
+        start_at: '2020-10-01 10:00:00',
+        end_at: '2020-10-01 11:00:00'
+      }
+    end
 
     context 'when request attributes are valid' do
       before { post "/users/#{user_id}/appointments", params: valid_attributes }

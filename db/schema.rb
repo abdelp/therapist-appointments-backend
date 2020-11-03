@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# rubocop:disable Metrics/BlockLength
 
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
@@ -69,3 +69,5 @@ ActiveRecord::Schema.define(version: 20_201_030_153_439) do
   add_foreign_key 'therapists_specialties', 'specialties'
   add_foreign_key 'therapists_specialties', 'users'
 end
+
+# rubocop:enable Metrics/BlockLength

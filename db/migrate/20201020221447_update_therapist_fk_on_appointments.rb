@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-
+# Migration to update fk name from appointments to therapists
 class UpdateTherapistFkOnAppointments < ActiveRecord::Migration[6.0]
   def change
     remove_foreign_key :appointments, :therapists

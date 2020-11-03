@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-
+# Migration to create Appointments relation
 class CreateAppointments < ActiveRecord::Migration[6.0]
   def change
     create_table :appointments do |t|

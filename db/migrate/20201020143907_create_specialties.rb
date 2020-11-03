@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-
+# Migration to create Specialties relation
 class CreateSpecialties < ActiveRecord::Migration[6.0]
   def change
     create_table :specialties do |t|

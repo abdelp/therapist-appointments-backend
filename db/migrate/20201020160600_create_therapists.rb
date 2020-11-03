@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-
+# Migration to create Therapists relation
 class CreateTherapists < ActiveRecord::Migration[6.0]
   def change
     create_table :therapists do |t|

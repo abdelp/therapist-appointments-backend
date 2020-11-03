@@ -1,11 +1,12 @@
-# frozen_string_literal: true
-
 class TherapistsController < ApplicationController
   before_action :set_therapist, only: %i[show update destroy]
   skip_before_action :require_login, only: %i[index show]
 
   def index
-    @therapists = Therapist.all.joins('INNER JOIN users u ON u.id = therapists.user_id').select(:id, :user_id, :fullname, :img_url)
+    @therapists = Therapist
+      .all
+      .joins('INNER JOIN users u ON u.id = therapists.user_id')
+      .select(:id, :user_id, :fullname, :img_url)
     json_response(@therapists)
   end
 
