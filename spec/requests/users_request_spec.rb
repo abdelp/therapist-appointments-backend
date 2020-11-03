@@ -3,6 +3,10 @@ require 'rails_helper'
 RSpec.describe 'Users', type: :request do
   let!(:users) { create_list(:user, 10) }
   let(:user_id) { users.first.id }
+  let(:token) do
+    post '/login', params: { username: users.last.username, password: '123456' }
+    JSON.parse(response.body)['token']
+  end
 
   describe 'GET /users' do
     before { get '/users' }
@@ -18,7 +22,7 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'GET /users/:id' do
-    before { get "/users/#{user_id}" }
+    before { get "/users/#{user_id}", params: { username: 'AbdelP' }, headers: { 'Authorization': "Bearer #{token}" } }
 
     context 'when the record exists' do
       it 'returns the user' do
@@ -45,22 +49,22 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'POST /users' do
-    let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com' } }
+    let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com', password: '123456' } }
 
     context 'when the request is valid' do
-      before { post '/users', params: valid_attributes }
+      before { post '/users', params: valid_attributes, headers: { 'Authorization': "Bearer #{token}" } }
 
       it 'creates a user' do
-        expect(json['username']).to eq('AbdelP')
+        expect(json['user']['username']).to eq('AbdelP')
       end
 
-      it 'returns status code 201' do
-        expect(response).to have_http_status(201)
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
       end
     end
 
     context 'when the request is invalid' do
-      before { post '/users', params: { username: 'AbdelP' } }
+      before { post '/users', params: { username: 'AbdelP' }, headers: { 'Authorization': "Bearer #{token}" } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -77,7 +81,7 @@ RSpec.describe 'Users', type: :request do
     let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com' } }
 
     context 'when the record exists' do
-      before { put "/users/#{user_id}", params: valid_attributes }
+      before { put "/users/#{user_id}", params: valid_attributes, headers: { 'Authorization': "Bearer #{token}" } }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -90,7 +94,7 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'DELETE /users/:id' do
-    before { delete "/users/#{user_id}" }
+    before { delete "/users/#{user_id}", params: {}, headers: { 'Authorization': "Bearer #{token}" } }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

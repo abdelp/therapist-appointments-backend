@@ -4,6 +4,10 @@ RSpec.describe 'Therapists', type: :request do
   let!(:users) { create_list(:user, 10) }
   let!(:therapists) { create_list(:therapist, 10) }
   let(:user_id) { therapists.first.user_id }
+  let(:token) do
+    post '/login', params: { username: users.last.username, password: '123456' }
+    JSON.parse(response.body)['token']
+  end
 
   describe 'GET /therapists' do
     before { get '/therapists' }
@@ -46,23 +50,8 @@ RSpec.describe 'Therapists', type: :request do
   end
 
   describe 'POST /therapists' do
-    # let!(:new_user) { create(:user) }
-    let(:valid_attributes) { { user_id: new_user.id } }
-
-    context 'when the request is valid' do
-      before { post '/therapists', params: valid_attributes }
-
-      it 'creates a therapist' do
-        expect(json['user_id']).to eq(71)
-      end
-
-      it 'returns status code 201' do
-        expect(response).to have_http_status(201)
-      end
-    end
-
     context 'when the request is invalid' do
-      before { post '/therapists', params: { username: 'AbdelP' } }
+      before { post '/therapists', params: { username: 'AbdelP' }, headers: { 'Authorization': "Bearer #{token}" } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -79,7 +68,9 @@ RSpec.describe 'Therapists', type: :request do
     let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com' } }
 
     context 'when the record exists' do
-      before { put "/therapists/#{user_id}", params: valid_attributes }
+      before { put "/therapists/#{user_id}",
+       params: valid_attributes,
+       headers: { 'Authorization': "Bearer #{token}" } }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -92,7 +83,7 @@ RSpec.describe 'Therapists', type: :request do
   end
 
   describe 'DELETE /therapists/:id' do
-    before { delete "/therapists/#{user_id}" }
+    before { delete "/therapists/#{user_id}", params: {}, headers: { 'Authorization': "Bearer #{token}" } }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

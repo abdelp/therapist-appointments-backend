@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[show update destroy]
-  skip_before_action :require_login, only: %i[login create]
+  skip_before_action :require_login, only: %i[create index]
 
   def index
     @users = User.all
