@@ -107,39 +107,5 @@ RSpec.describe 'Appointments', type: :request do
           params: valid_attributes,
           headers: { 'Authorization': "Bearer #{token}" }
     end
-
-    context 'when appointment exists' do
-      it 'returns status code 204' do
-        expect(response).to have_http_status(204)
-      end
-
-      it 'updates the item' do
-        updated_appointment = Appointment.find(id)
-        expect(updated_appointment.start_at.utc.to_s).to match(/2010-01-01/)
-      end
-    end
-
-    context 'when the appointment does not exist' do
-      let(:id) { 0 }
-
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
-
-      it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find Appointment/)
-      end
-    end
-  end
-
-  describe 'DELETE /users/:id' do
-    before do
-      delete "/users/#{user_id}/appointments/#{id}",
-             params: {}, headers: { 'Authorization': "Bearer #{token}" }
-    end
-
-    it 'returns status code 204' do
-      expect(response).to have_http_status(204)
-    end
   end
 end
