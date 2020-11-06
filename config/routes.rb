@@ -1,3 +1,9 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :users, only: %i[create] do
+    resources :appointments, only: %i[create index show]
+  end
+
+  post '/login', to: 'users#login'
+
+  resources :therapists, only: %i[index show]
 end
