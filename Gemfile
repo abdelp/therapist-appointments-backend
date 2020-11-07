@@ -49,3 +49,4 @@ end
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 gem 'jwt', '~> 2.2', '>= 2.2.2'
+gem 'rack-rewrite', '~> 1.5', '>= 1.5.1'
