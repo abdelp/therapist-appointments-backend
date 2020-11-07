@@ -1,11 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show update destroy]
-  skip_before_action :require_login, only: %i[create index]
-
-  def index
-    @users = User.all
-    json_response(@users)
-  end
+  skip_before_action :require_login, only: %i[create login]
 
   def create
     @user = User.create!(user_params)
@@ -27,28 +21,6 @@ class UsersController < ApplicationController
     else
       render status: 422, json: { error: 'Invalid username or password' }
     end
-  end
-
-  def auto_login
-    if logged_in_user
-      render json: logged_in_user
-    else
-      render status: 422, json: { errors: 'No User Logged In' }
-    end
-  end
-
-  def show
-    json_response(@user)
-  end
-
-  def update
-    @user.update(user_params)
-    head :no_content
-  end
-
-  def destroy
-    @user.destroy
-    head :no_content
   end
 
   private

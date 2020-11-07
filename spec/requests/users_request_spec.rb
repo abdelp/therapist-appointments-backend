@@ -8,46 +8,6 @@ RSpec.describe 'Users', type: :request do
     JSON.parse(response.body)['token']
   end
 
-  describe 'GET /users' do
-    before { get '/users' }
-
-    it 'returns users' do
-      expect(json).not_to be_empty
-      expect(json.size).to eq(10)
-    end
-
-    it 'returns status code 200' do
-      expect(response).to have_http_status(200)
-    end
-  end
-
-  describe 'GET /users/:id' do
-    before { get "/users/#{user_id}", params: { username: 'AbdelP' }, headers: { 'Authorization': "Bearer #{token}" } }
-
-    context 'when the record exists' do
-      it 'returns the user' do
-        expect(json).not_to be_empty
-        expect(json['id']).to eq(user_id)
-      end
-
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
-      end
-    end
-
-    context 'when the record does not exist' do
-      let(:user_id) { 100 }
-
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
-
-      it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find User/)
-      end
-    end
-  end
-
   describe 'POST /users' do
     let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com', password: '123456' } }
 
@@ -74,30 +34,6 @@ RSpec.describe 'Users', type: :request do
         expect(response.body)
           .to match(/Validation failed: Email can't be blank/)
       end
-    end
-  end
-
-  describe 'PUT /users/:id' do
-    let(:valid_attributes) { { username: 'AbdelP', email: 'abdel.perezpy@gmail.com' } }
-
-    context 'when the record exists' do
-      before { put "/users/#{user_id}", params: valid_attributes, headers: { 'Authorization': "Bearer #{token}" } }
-
-      it 'updates the record' do
-        expect(response.body).to be_empty
-      end
-
-      it 'returns status code 204' do
-        expect(response).to have_http_status(204)
-      end
-    end
-  end
-
-  describe 'DELETE /users/:id' do
-    before { delete "/users/#{user_id}", params: {}, headers: { 'Authorization': "Bearer #{token}" } }
-
-    it 'returns status code 204' do
-      expect(response).to have_http_status(204)
     end
   end
 end
