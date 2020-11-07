@@ -36,7 +36,7 @@ module TherapistAppointments
     config.api_only = true
 
     config.middleware.insert_before(Rack::Runtime, Rack::Rewrite) do
-      rewrite %r{/(.*)}, '/v1/$1'
+      rewrite %r{/(.*)}, '/api/v1/$1'
     end
   end
 end

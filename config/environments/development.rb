@@ -50,4 +50,5 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.hosts << "api.abdel.com"
+  config.action_controller.perform_caching = false
 end
