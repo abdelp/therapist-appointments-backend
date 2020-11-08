@@ -1,4 +1,4 @@
-class TherapistsController < ApplicationController
+class API::V1::TherapistsController < ApplicationController
   before_action :set_therapist, only: %i[show update destroy]
   skip_before_action :require_login, only: %i[index show]
 

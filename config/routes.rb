@@ -1,9 +1,16 @@
 Rails.application.routes.draw do
-  resources :users, only: %i[create] do
-    resources :appointments, only: %i[create index show]
+  namespace :api do
+    namespace :v1 do
+      resources :users do
+        resources :appointments
+      end
+
+      post '/login', to: 'users#login'
+      get '/auto_login', to: 'users#auto_login'
+
+      resources :therapists do
+        resources :appointments
+      end
+    end
   end
-
-  post '/login', to: 'users#login'
-
-  resources :therapists, only: %i[index show]
 end
